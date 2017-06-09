@@ -80,7 +80,7 @@ module.exports = {
       title: 'Boer - by react',
       template: './react/index.ejs',
       inject: true,
-      filename: 'react_index.html',
+      filename: 'index.html',
       chunks: ['react_index', 'manifest'],
       chunksSortMode: 'dependency'
     })
