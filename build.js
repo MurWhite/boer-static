@@ -11,13 +11,27 @@ let assetsPath = path.resolve(__dirname, './docs');
 rm('-rf', assetsPath);
 mkdir('-p', assetsPath);
 
-webpack(webpackConfig, function (err,stats) {
-    if (err) throw err;
-    console.log(stats.toString({
-        colors: true,
-        modules: false,
-        children: false,
-        chunks: true,
-        chunkModules: false
-    }));
+webpackConfig.plugins.push(
+  new webpack.DefinePlugin({
+    'process.env': {
+      NODE_ENV: JSON.stringify('production')
+    }
+  })
+);
+webpackConfig.plugins.push(
+  new webpack.optimize.UglifyJsPlugin({
+    sourceMap: true,
+    minimize: true
+  }),
+);
+
+webpack(webpackConfig, function (err, stats) {
+  if (err) throw err;
+  console.log(stats.toString({
+    colors: true,
+    modules: false,
+    children: false,
+    chunks: true,
+    chunkModules: false
+  }));
 });

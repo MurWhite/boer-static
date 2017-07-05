@@ -30,13 +30,17 @@ export default class Index extends React.Component {
     }, 300)
   }
 
+  handleBgLoaded(){
+
+  }
+
   render() {
     return (
       <div className="index-wrap">
         <div className="pool-wrap">
-          <Pool ref={(ref) => {
-            this.poolRef = ref
-          }}/>
+          <img src={require("../assest/bg-big.png")}
+               onLoad={this.handleBgLoaded.bind(this)}/>
+          <Pool ref={ref => this.poolRef = ref}/>
           <i className={`iconfont icon-refresh ${this.state.refreshing ? 'refreshing' : ''}`}
              onClick={this.refreshPool}></i>
         </div>

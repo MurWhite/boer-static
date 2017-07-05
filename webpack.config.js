@@ -38,7 +38,7 @@ module.exports = {
       {
         test: /\.(scss|css)$/,
         use: ExtractTextPlugin.extract({
-          use: ['css-loader', 'postcss-loader', 'sass-loader']
+          use: ['css-loader?minimize', 'postcss-loader', 'sass-loader']
         })
       },
       {
@@ -82,11 +82,26 @@ module.exports = {
       inject: true,
       filename: 'index.html',
       chunks: ['react_index', 'manifest'],
-      chunksSortMode: 'dependency'
-    })
+      chunksSortMode: 'dependency',
+      minify: {
+        minifyJS: true
+      }
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      minimize: true,
+      beautify: false,
+      compress: {
+        warnings: false,
+        comparisons: false,
+      },
+      output: {
+        comments: false,
+      },
+      sourceMap: true,
+    }),
   ],
   devServer: {
-    contentBase: path.join(__dirname, './dist/')
+    contentBase: path.join(__dirname, './docs/')
   },
-  devtool: "cheap-eval-source-map"
+  devtool: "source-map"
 };
