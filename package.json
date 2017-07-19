@@ -11,7 +11,7 @@
     "type": "git",
     "url": "git+https://github.com/MurWhite/boer-static.git"
   },
-  "author": "",
+  "author": "baibo",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/MurWhite/boer-static/issues"
@@ -31,6 +31,7 @@
     "html-webpack-plugin": "^2.28.0",
     "node-sass": "^4.5.3",
     "postcss-loader": "^2.0.5",
+    "prismjs": "^1.6.0",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "sass-loader": "^6.0.5",
@@ -41,5 +42,8 @@
     "vue-template-compiler": "^2.3.3",
     "webpack": "^2.6.1",
     "webpack-dev-server": "^2.4.5"
+  },
+  "dependencies": {
+    "showdown": "^1.7.1"
   }
 }

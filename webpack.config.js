@@ -5,12 +5,16 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const {entry, plugins} = require('./webpack.pager');
+
+let mdFormateCss = new ExtractTextPlugin('');
 
 module.exports = {
-  entry: {
+  entry: Object.assign({
     vue_index: ['babel-polyfill', './vue/page/index.js'],
-    react_index: ['babel-polyfill', './react/index.jsx']
-  },
+    md_css: './react/page/markdown.scss',
+    md_js: 'prismjs/prism.js'
+  }, entry),
   output: {
     path: path.join(__dirname, './docs/'),
     filename: 'js/[name].js',
@@ -32,7 +36,7 @@ module.exports = {
       },
       {
         test: /\.js$/,
-        exclude: /node_modules/,
+        exclude: [/node_modules/, 'prism.js'],
         use: "babel-loader"
       },
       {
@@ -76,17 +80,7 @@ module.exports = {
       chunks: ['vue_index', 'manifest'],
       chunksSortMode: 'dependency'
     }),
-    new HtmlWebpackPlugin({
-      title: 'Boer - by react',
-      template: './react/index.ejs',
-      inject: true,
-      filename: 'index.html',
-      chunks: ['react_index', 'manifest'],
-      chunksSortMode: 'dependency',
-      minify: {
-        minifyJS: true
-      }
-    }),
+    ...plugins,
     new webpack.optimize.UglifyJsPlugin({
       minimize: true,
       beautify: false,
