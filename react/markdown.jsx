@@ -2,21 +2,29 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const _ = require('underscore')
 
-import Header from './page/markdown.header.jsx'
 import Editor from './page/markdown.editor.jsx'
 import Previewer from './page/markdown.previewer.jsx'
 
 import './page/markdown.scss'
 
+function Header(props) {
+  return (
+    <div className="markdown-header-wrap">
+      <div className="btn-group">
+        <a className={`btn btn-icon ${props.state.showEditor && !props.state.showPreview ? 'active' : ''}`}
+           onClick={props.utils.showEditor}>E</a>
+        <a className={`btn btn-icon ${props.state.showEditor && props.state.showPreview ? 'active' : ''}`}
+           onClick={props.utils.showAll}>E&P</a>
+        <a className={`btn btn-icon ${!props.state.showEditor && props.state.showPreview ? 'active' : ''}`}
+           onClick={props.utils.showPreview}>P</a>
+      </div>
+    </div>
+  )
+}
+
 class Page extends React.Component {
   constructor(props) {
     super(props);
-    let self = this;
-    let scrollThrottled = _.throttle((scroll) => {
-      self.setState({scroll});
-      console.log('????', scroll)
-    }, 100)
-
     this.state = {
       content: '',
       showPreview: true,
@@ -25,8 +33,7 @@ class Page extends React.Component {
         from: 'editor',
         pos: 0,
         scrolling: false
-      },
-      scrollHandler: scrollThrottled
+      }
     };
     this.handleContentChange = this.handleContentChange.bind(this);
     this.utils = this.utils.bind(this);
@@ -41,24 +48,14 @@ class Page extends React.Component {
   utils() {
     let self = this;
     return {
-      togglePreview(isShow){
-        let tar = true;
-        if (isShow === undefined) {
-          tar = !self.state.showPreview;
-        } else {
-          tar = isShow;
-        }
-        self.setState({showPreview: tar})
+      showPreview(ctx, e, isShow){
+        self.setState({showEditor: false, showPreview: true})
       },
-      toggleEditor(ctx, e, isShow){
-        console.log('toggle', isShow)
-        let tar = true;
-        if (isShow === undefined) {
-          tar = !self.state.showEditor;
-        } else {
-          tar = isShow;
-        }
-        self.setState({showEditor: tar})
+      showEditor(ctx, e, isShow){
+        self.setState({showEditor: true, showPreview: false})
+      },
+      showAll(){
+        self.setState({showEditor: true, showPreview: true})
       }
     }
   }
@@ -75,7 +72,7 @@ class Page extends React.Component {
     }, 100)
   }
 
-  endScroll(){
+  endScroll() {
     this.setState({
       scroll: {scrolling: false}
     });
@@ -84,7 +81,7 @@ class Page extends React.Component {
   render() {
     return (
       <div className="wrapper">
-        <Header utils={this.utils()}/>
+        <Header utils={this.utils()} state={this.state}/>
         <Editor show={this.state.showEditor}
                 scrollData={this.state.scroll}
                 emitScroll={this.handleScroll()}

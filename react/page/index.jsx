@@ -5,7 +5,7 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 
 import '../debris/reset.scss';
-import '../debris/iconfont.scss'
+import '../debris/iconfont.css'
 import './index.scss'
 
 import Pool from '../canvas/pool.jsx';
@@ -49,6 +49,9 @@ export default class Index extends React.Component {
             <h1>boer</h1>
           </div>
           <div className="contract-me">
+            <a href="/markdown.html">
+              <i className="iconfont icon-markdown"> Markdown</i>
+            </a>
             <a href="https://github.com/MurWhite">
               <i className="iconfont icon-github"> MurWhite</i>
             </a>

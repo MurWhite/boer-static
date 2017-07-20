@@ -3,7 +3,7 @@
  */
 import React, {Component} from 'react'
 import {findDOMNode} from 'react-dom'
-import tool from '../utils/index'
+import _ from 'underscore'
 
 export default class Pool extends Component {
   static defaultProps = {
@@ -32,7 +32,7 @@ export default class Pool extends Component {
     this.ctx.fillStyle = this.props.maskColor;
     this.ctx.fillRect(0, 0, document.body.clientWidth, document.body.clientHeight);
 
-    window.onresize = tool.throttle((e) => {
+    window.onresize = _.throttle((e) => {
       this.setState({pageSize: {w: document.body.clientWidth, h: document.body.clientHeight}})
       this.refresh();
     }, 300, 1000)

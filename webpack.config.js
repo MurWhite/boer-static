@@ -5,6 +5,7 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
+let FaviconsWebpackPlugin = require('favicons-webpack-plugin')
 const {entry, plugins} = require('./webpack.pager');
 
 let mdFormateCss = new ExtractTextPlugin('');
@@ -62,7 +63,8 @@ module.exports = {
     ]
   },
   plugins: [
-    new ExtractTextPlugin({filename: 'style.css'}),
+    new ExtractTextPlugin({filename: 'css/[name].css'}),
+    new FaviconsWebpackPlugin('./favicon.png'),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
       minChunks: function (module) {

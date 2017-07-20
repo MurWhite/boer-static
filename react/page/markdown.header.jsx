@@ -6,6 +6,7 @@ export default class extends React.Component {
       <div className="markdown-header-wrap">
         <div className="markdown-header">
           <div className="btn" onClick={this.props.utils.toggleEditor}>仅显示预览</div>
+          <div className="btn" onClick={this.props.utils.toggleEditor}>仅显示预览</div>
         </div>
       </div>
     );

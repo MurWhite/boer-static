@@ -128,9 +128,8 @@ export default class extends React.Component {
 
   render() {
     return (
-      <div className="previewer-wrap"
-           onScroll={this.handleScroll}
-           ref={ref => this.mdPerRef = ref}>
+      <div className="previewer-wrap" style={{display: this.props.show ? 'block' : 'none'}}
+           onScroll={this.handleScroll} ref={ref => this.mdPerRef = ref}>
       </div>
     );
   }
