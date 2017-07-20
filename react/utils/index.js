@@ -1,23 +1,22 @@
 /**
  * Created by B on 2017/6/8.
  */
+
 module.exports = {
-  throttle(fn, delay, minRunDelay){
-    let timer = null, t_start;
-    return () => {
-      let args = arguments, t_now = +new Date();
-      clearTimeout(timer);
-      if (!t_start) {
-        t_start = t_now;
+  scrollTo(ele, targetPos, duration, cb){
+    let nowPos = ele.scrollTop,
+      curTime = new Date(),
+      distance = targetPos - nowPos;
+    let interval = setInterval(() => {
+      let p = (new Date() - curTime) / duration;
+      if (p >= 1) p = 1;
+      ele.scrollTop = nowPos + distance * p;
+      if (p >= 1) {
+        setTimeout(() => {
+          cb && cb();
+        }, 100);
+        clearInterval(interval);
       }
-      if (t_now - t_start >= minRunDelay) {
-        fn(args);
-        t_start = t_now;
-      } else {
-        timer = setTimeout(() => {
-          fn(args);
-        }, delay)
-      }
-    }
+    }, 13)
   }
 };

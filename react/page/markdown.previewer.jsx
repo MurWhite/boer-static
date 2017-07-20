@@ -1,6 +1,7 @@
 const React = require('react');
 const showdown = require('showdown');
 const {Prism} = require('./markdown.plugins');
+const utils = require('../utils/index');
 
 import './markdown.previewer.scss'
 
@@ -74,6 +75,7 @@ export default class extends React.Component {
   constructor(props) {
     super(props);
     this.handleMarkdownChange = this.handleMarkdownChange.bind(this);
+    this.handleScroll = this.handleScroll.bind(this);
   }
 
   componentDidMount() {
@@ -82,6 +84,14 @@ export default class extends React.Component {
 
   componentWillReceiveProps(to) {
     this.handleMarkdownChange(to.markdown);
+    if (to.scrollData.scrolling && to.scrollData.from === 'editor') {
+      let self = this;
+      let previewer = this.mdPerRef;
+      let maxScroll = previewer.scrollHeight - previewer.clientHeight;
+      utils.scrollTo(previewer, maxScroll * to.scrollData.pos, 500, () => {
+        self.props.endScroll()
+      })
+    }
     return true;
   }
 
@@ -107,9 +117,20 @@ export default class extends React.Component {
     }
   }
 
+  handleScroll(ctx, e) {
+    if (this.props.scrollData.scrolling) return;
+    let ele = this.mdPerRef;
+    let scroll = ele.scrollTop,
+      maxScroll = ele.scrollHeight - ele.clientHeight;
+    let per = scroll / maxScroll;
+    this.props.emitScroll({from: 'previewer', pos: per});
+  }
+
   render() {
     return (
-      <div className="previewer-wrap" ref={ref => this.mdPerRef = ref}>
+      <div className="previewer-wrap"
+           onScroll={this.handleScroll}
+           ref={ref => this.mdPerRef = ref}>
       </div>
     );
   }
