@@ -22,7 +22,9 @@ module.exports = {
     chunkFilename: '[name].[chunkhash:4].js'
   },
   resolve: {
-    alias: {}
+    alias: {
+      '@rcoms': path.resolve(__dirname, './react/com/')
+    }
   },
   module: {
     rules: [

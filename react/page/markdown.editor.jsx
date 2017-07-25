@@ -1,7 +1,7 @@
 const React = require('react');
 const utils = require('../utils/index');
 
-// import './md-editor.scss'
+import '@rcoms/toast.jsx'
 
 export default class extends React.Component {
 

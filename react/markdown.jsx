@@ -1,6 +1,8 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
-const _ = require('underscore')
+const _ = require('underscore');
+
+import '@rcoms/toast.jsx'
 
 import Editor from './page/markdown.editor.jsx'
 import Previewer from './page/markdown.previewer.jsx'
@@ -70,7 +72,7 @@ class Page extends React.Component {
             try {
               document.execCommand('copy');
               input.blur();
-
+              React.$toast('美丽的熊熊公主，波波已经为您复制成功~');
             } catch (err) {
               alert('please press Ctrl/Cmd+C to copy');
             }
