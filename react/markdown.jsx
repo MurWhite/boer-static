@@ -17,6 +17,7 @@ function Header(props) {
            onClick={props.utils.showAll}>E&P</a>
         <a className={`btn btn-icon ${!props.state.showEditor && props.state.showPreview ? 'active' : ''}`}
            onClick={props.utils.showPreview}>P</a>
+        <a className={`btn btn-icon`} onClick={props.utils.copy}>复制</a>
       </div>
     </div>
   )
@@ -27,6 +28,7 @@ class Page extends React.Component {
     super(props);
     this.state = {
       content: '',
+      markdownHtml: '',
       showPreview: true,
       showEditor: true,
       scroll: {
@@ -48,14 +50,32 @@ class Page extends React.Component {
   utils() {
     let self = this;
     return {
-      showPreview(ctx, e, isShow){
+      showPreview(ctx, e, isShow) {
         self.setState({showEditor: false, showPreview: true})
       },
-      showEditor(ctx, e, isShow){
+      showEditor(ctx, e, isShow) {
         self.setState({showEditor: true, showPreview: false})
       },
-      showAll(){
+      showAll() {
         self.setState({showEditor: true, showPreview: true})
+      },
+      copy() {
+        setTimeout(() => {
+          let html = `<style type=text/css>@import url('https://murwhite.github.io/boer-static/css/markdown.css');</style>`
+            + self.state.markdownHtml;
+          let input = self.copyInput;
+          input.value = html;
+          if (input && input.select) {
+            input.select();
+            try {
+              document.execCommand('copy');
+              input.blur();
+
+            } catch (err) {
+              alert('please press Ctrl/Cmd+C to copy');
+            }
+          }
+        }, 200)
       }
     }
   }
@@ -91,7 +111,9 @@ class Page extends React.Component {
                    scrollData={this.state.scroll}
                    emitScroll={this.handleScroll()}
                    endScroll={this.endScroll}
+                   emitHtml={e => this.setState({markdownHtml: e})}
                    markdown={this.state.content}/>
+        <input ref={ref => this.copyInput = ref} className="input-for-copy"/>
       </div>
     );
   }

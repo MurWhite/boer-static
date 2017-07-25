@@ -1,6 +1,7 @@
 const React = require('react');
 const showdown = require('showdown');
 const {Prism} = require('./markdown.plugins');
+const inlineresources = require('inlineresources');
 const utils = require('../utils/index');
 
 import './markdown.previewer.scss'
@@ -83,7 +84,9 @@ export default class extends React.Component {
   }
 
   componentWillReceiveProps(to) {
-    this.handleMarkdownChange(to.markdown);
+    if(to.markdown !== this.props.markdown){
+      this.handleMarkdownChange(to.markdown);
+    }
     if (to.scrollData.scrolling && to.scrollData.from === 'editor') {
       let self = this;
       let previewer = this.mdPerRef;
@@ -110,11 +113,13 @@ export default class extends React.Component {
       }
       wrapNode.replaceChild(cn.node, tarNode);
     }
+    wrapNode.id = 'previewer';
     if (this.mdPerRef.firstChild) {
       this.mdPerRef.replaceChild(wrapNode, this.mdPerRef.firstChild);
     } else {
       this.mdPerRef.appendChild(wrapNode);
     }
+    this.props.emitHtml(wrapNode.outerHTML);
   }
 
   handleScroll(ctx, e) {
