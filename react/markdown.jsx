@@ -115,7 +115,7 @@ class Page extends React.Component {
                    endScroll={this.endScroll}
                    emitHtml={e => this.setState({markdownHtml: e})}
                    markdown={this.state.content}/>
-        <input ref={ref => this.copyInput = ref} className="input-for-copy"/>
+        <textarea ref={ref => this.copyInput = ref} className="input-for-copy"></textarea>
       </div>
     );
   }
