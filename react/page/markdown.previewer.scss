@@ -24,6 +24,8 @@
     background: #fafafa;
     padding: 10px 0 10px 15px;
     margin: 30px 0 10px;
+    font-size: 24px;
+    font-weight: bold;
   }
   h3 {
     border-left: $baseColor 8px solid;
@@ -69,7 +71,7 @@
     }
   }
   code {
-    background: rgba(110, 203, 243, 0.24);
+    background: rgba(27,31,35,0.05);
     padding: 2px 8px;
     border-radius: 3px;
   }
@@ -96,8 +98,6 @@
     }
   }
 
-  //hr{border-color: $baseColor}
-
   table {
     //border: 1px solid $baseColor;
     border-collapse: collapse;
@@ -111,5 +111,11 @@
     tr:nth-child(2n){
       background: lighten($baseColor, 49%);
     }
+  }
+
+  p>img{
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
   }
 }
