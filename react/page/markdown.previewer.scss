@@ -44,15 +44,18 @@
     box-shadow: 0 0 10px 0 #333;
     max-width: 800px;
     margin: .5em auto;
+    overflow-x: scroll;
     code {
-      white-space: pre-wrap;
       word-break: break-word;
       background: none;
+    }
+    &::-webkit-scrollbar{
+      display: none;
     }
   }
   pre[data-lang] {
     position: relative;
-    overflow: visible;
+    overflow-x: scroll;
     margin-top: 2em;
     border-top-left-radius: 0;
     &:before {
