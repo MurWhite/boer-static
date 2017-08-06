@@ -56,10 +56,8 @@
   pre[data-lang] {
     position: relative;
     overflow-x: scroll;
-    margin-top: 2em;
-    border-top-left-radius: 0;
+    padding-top: 1.5em;
     &:before {
-      box-shadow: 0 0 10px 0 #333;
       content: attr(data-lang);
       font-size: .6em;
       line-height: 1;
@@ -67,7 +65,6 @@
       position: absolute;
       top: 1px;
       left: 0;
-      transform: translate3d(0, -100%, 0);
       background: inherit;
       color: #fff;
       border-radius: .3em .3em 0 0;
