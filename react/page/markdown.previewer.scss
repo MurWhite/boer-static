@@ -7,7 +7,6 @@
 }
 
 #previewer {
-  max-width: 980px;
   margin: 0 auto;
 
   & > *:first-child {
@@ -38,11 +37,11 @@
     background: #fafafa;
   }
   p {
-    line-height: 1.5;
+    line-height: 28px;
+    font-size: 16px !important;
   }
   pre {
     box-shadow: 0 0 10px 0 #333;
-    max-width: 800px;
     margin: .5em auto;
     overflow-x: scroll;
     code {
