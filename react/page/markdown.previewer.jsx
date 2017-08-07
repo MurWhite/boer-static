@@ -3,11 +3,10 @@ const showdown = require('showdown');
 const {Prism} = require('./markdown.plugins');
 const inlineresources = require('inlineresources');
 const utils = require('../utils/index');
-
 import './markdown.previewer.scss'
+let codeNodeCollection = [];
 
 showdown.setFlavor('github');
-let codeNodeCollection = [];
 const codeRegex = /<pre><code( class="[\s\S]*?")?>([\s\S]*?)<\/code><\/pre>/g;
 const codeGetLang = /\blang(?:uage)?-([\s\S+]*?)">/i;
 const classNameGetLang = /\blang(?:uage)?-([\S+]*?)\s/i;
@@ -62,6 +61,7 @@ let hrefExt = {
     return text;
   }
 };
+
 showdown.extension('myExt', [codeExt, hrefExt]);
 const mdConverter = new showdown.Converter({
   ghCompatibleHeaderId: true,
@@ -70,7 +70,6 @@ const mdConverter = new showdown.Converter({
   excludeTrailingPunctuationFromURLs: true,
   extensions: ['myExt']
 });
-
 export default class extends React.Component {
 
   constructor(props) {
@@ -84,7 +83,7 @@ export default class extends React.Component {
   }
 
   componentWillReceiveProps(to) {
-    if(to.markdown !== this.props.markdown){
+    if (to.markdown !== this.props.markdown) {
       this.handleMarkdownChange(to.markdown);
     }
     if (to.scrollData.scrolling && to.scrollData.from === 'editor') {
@@ -98,6 +97,7 @@ export default class extends React.Component {
     return true;
   }
 
+  // 处理原markdown标记语言的变化
   handleMarkdownChange(content) {
     let html = mdConverter.makeHtml(content);
     let wrapNode = document.createElement('DIV');

@@ -9,18 +9,21 @@ import Previewer from './page/markdown.previewer.jsx'
 
 import './page/markdown.scss'
 
+// 头部工具栏
 function Header(props) {
   return (
     <div className="markdown-header-wrap">
+      <div></div>
       <div className="btn-group">
-        <a className={`btn btn-icon ${props.state.showEditor && !props.state.showPreview ? 'active' : ''}`}
-           onClick={props.utils.showEditor}>E</a>
-        <a className={`btn btn-icon ${props.state.showEditor && props.state.showPreview ? 'active' : ''}`}
-           onClick={props.utils.showAll}>E&P</a>
-        <a className={`btn btn-icon ${!props.state.showEditor && props.state.showPreview ? 'active' : ''}`}
-           onClick={props.utils.showPreview}>P</a>
-        <a className={`btn btn-icon`} onClick={props.utils.copy}>复制</a>
+        <a className={`btn iconfont icon-edit ${props.state.showEditor && !props.state.showPreview ? 'active' : ''}`}
+           onClick={props.utils.showEditor}></a>
+        <a className={`btn iconfont icon-markdown ${props.state.showEditor && props.state.showPreview ? 'active' : ''}`}
+           onClick={props.utils.showAll}></a>
+        <a className={`btn iconfont icon-eye ${!props.state.showEditor && props.state.showPreview ? 'active' : ''}`}
+           onClick={props.utils.showPreview}></a>
+        <a className={`btn`} onClick={props.utils.copy}>复制</a>
       </div>
+      <div className="draft-list">草稿列表</div>
     </div>
   )
 }

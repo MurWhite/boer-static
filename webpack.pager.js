@@ -4,7 +4,13 @@
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-let entry = {}, plugins = [];
+let entry = {}, plugins = [], defaultOptions = {
+  type: '',
+  entry: '',
+  title: '',
+  module: '',
+  chunks: []
+};
 
 let pager = [];
 
@@ -20,11 +26,18 @@ pager.push({
   title: 'markdown书写',
   chunks: []
 });
+pager.push({
+  type: 'vue',
+  entry: 'page/markdown.js',
+  title: 'MD - vue',
+  module: 'md-vue',
+  chunks: []
+});
 
 pager.map(page => {
   let entryPath = `./${page.type}/${page.entry}`,
     templatePath = '',
-    filename = page.entry.replace(/(.*\/)*([^.]+).*/ig, "$2");
+    filename = page.module || page.entry.replace(/(.*\/)*([^.]+).*/ig, "$2");
   if (page.type === 'react') {
     templatePath = page.template || './react/index.ejs';
   } else {
