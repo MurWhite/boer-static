@@ -17,26 +17,29 @@ let pager = [];
 pager.push({
   type: 'react',
   entry: 'index.jsx',
-  title: 'Boer - by react',
-  chunks: []
+  title: 'Boer - by react'
 });
 pager.push({
   type: 'react',
   entry: 'markdown.jsx',
-  title: 'markdown书写',
-  chunks: []
+  title: 'markdown书写'
 });
 pager.push({
   type: 'vue',
   entry: 'page/markdown.js',
   title: 'MD - vue',
-  module: 'md-vue',
-  chunks: []
+  module: 'md-vue'
+});
+pager.push({
+  type: 'vue',
+  entry: 'page/game.puzzle.js',
+  title: '拼图游戏',
+  module: 'puzzle-vue'
 });
 
 pager.map(page => {
   let entryPath = `./${page.type}/${page.entry}`,
-    templatePath = '',
+    templatePath = '', chunks = page.chunks || [],
     filename = page.module || page.entry.replace(/(.*\/)*([^.]+).*/ig, "$2");
   if (page.type === 'react') {
     templatePath = page.template || './react/index.ejs';
@@ -50,7 +53,7 @@ pager.map(page => {
       template: templatePath,
       inject: true,
       filename: `${filename}.html`,
-      chunks: [filename, 'manifest', ...page.chunks],
+      chunks: [filename, 'manifest', ...chunks],
       chunksSortMode: 'dependency',
       minify: {
         minifyJS: true
