@@ -21,7 +21,7 @@ export default class extends React.Component {
     this.getDraft();
     setInterval(() => {
       this.saveDraft('list')
-    }, 10000)
+    }, 30000)
   }
 
   componentWillReceiveProps(to) {

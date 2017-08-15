@@ -1,31 +1,42 @@
 <template>
   <p>
-    <span ref="content" contenteditable @change="handleChange"></span>
+    <span ref="content"></span>
   </p>
 </template>
 <style lang="scss" scope>
-  p{
+  p {
     margin-top: 20px;
     background: #eee;
     width: 100%;
-    span{
+    span {
       width: 100%;
       display: block;
-      &:empty:after{
+      &:empty:after {
         content: '\200B';
       }
     }
   }
 </style>
 <script>
+  import base from './md.e.base.vue'
+
   export default {
+    extends: base,
     data() {
-      return {}
+      return {
+        ref: undefined
+      }
     },
     methods: {
-      handleChange(e){
-        console.log(e)
+      handleTextChange(text, node) {
+        console.log('this is children/s:', text)
+        this.$emit('change', text)
       }
+    },
+    mounted() {
+      this.ref = this.$refs.content;
+    },
+    beforeDestroyed() {
     }
   }
 </script>

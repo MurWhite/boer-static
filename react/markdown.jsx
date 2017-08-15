@@ -13,9 +13,11 @@ import './page/markdown.scss'
 function Header(props) {
   return (
     <div className="markdown-header-wrap">
-      <div></div>
+      <div className="syntax-tips">
+        <a className="btn iconfont icon-table"></a>
+      </div>
       <div className="btn-group">
-        <a className={`btn iconfont icon-edit ${props.state.showEditor && !props.state.showPreview ? 'active' : ''}`}
+        <a className={`btn iconfont icon-editor ${props.state.showEditor && !props.state.showPreview ? 'active' : ''}`}
            onClick={props.utils.showEditor}></a>
         <a className={`btn iconfont icon-markdown ${props.state.showEditor && props.state.showPreview ? 'active' : ''}`}
            onClick={props.utils.showAll}></a>

@@ -46,6 +46,7 @@
     "webpack-dev-server": "^2.4.5"
   },
   "dependencies": {
+    "marked": "^0.3.6",
     "showdown": "^1.7.1",
     "underscore": "^1.8.3"
   }

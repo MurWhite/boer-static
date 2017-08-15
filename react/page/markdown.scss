@@ -2,15 +2,6 @@
 
 $headerHeight: 40px;
 
-@font-face {
-  font-family: 'iconfont';  /* project id 313605 */
-  src: url('//at.alicdn.com/t/font_og162oam995m6lxr.eot');
-  src: url('//at.alicdn.com/t/font_og162oam995m6lxr.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_og162oam995m6lxr.woff') format('woff'),
-  url('//at.alicdn.com/t/font_og162oam995m6lxr.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_og162oam995m6lxr.svg#iconfont') format('svg');
-}
-
 body,html{
   margin: 0;
   padding: 0;
@@ -53,6 +44,7 @@ body,html{
   align-items: center;
   justify-content: space-between;
   position: absolute;
+  padding: 0 20px;
   top: 0;
   left: 0;
   right: 0;
