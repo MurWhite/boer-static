@@ -36,6 +36,12 @@ pager.push({
   title: '拼图游戏',
   module: 'puzzle-vue'
 });
+pager.push({
+  type: 'vue',
+  entry: 'page/game.puzzle.canvas.js',
+  title: '拼图游戏',
+  module: 'puzzle-canvas'
+});
 
 pager.map(page => {
   let entryPath = `./${page.type}/${page.entry}`,

@@ -67,16 +67,7 @@ module.exports = {
   },
   plugins: [
     new ExtractTextPlugin({filename: 'css/[name].css'}),
-    new FaviconsWebpackPlugin('./favicon.png'),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
-      minChunks: function (module) {
-        return module.context && module.context.indexOf('node)modules') !== -1;
-      }
-    }),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'manifest'
-    }),
+    // new FaviconsWebpackPlugin('./favicon.png'),
     new HtmlWebpackPlugin({
       title: '这是Vue首页',
       template: './vue/index.ejs',
