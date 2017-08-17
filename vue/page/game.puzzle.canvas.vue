@@ -167,7 +167,9 @@
             item.ix = item.dx = this.getRandom(0, this.imgWidth - this.cutWidth) * this.canvasRation;
             item.iy = item.dy = this.getRandom(this.imgHeight, this.imgHeight * 2 - this.cutHeight) * this.canvasRation;
             item.zIndex = item.index;
+            item.pIndex = -1;
           });
+          this.cutPlaces.map(_ => _.cutIndex = -1)
           this.$nextTick(_ => res())
         })
       },
