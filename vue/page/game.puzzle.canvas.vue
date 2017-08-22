@@ -1,10 +1,10 @@
 <template>
   <div>
-    <input type="button" value="随机" @click="shuffleCuts">
+    <input type="button" value="随机" @click="">
     <div class="game-wrap">
       <div class="game-pad">
         <div class="img-wrap" :style="{paddingBottom:imgHeight+'px'}">
-          <img ref="imgDom" :src="gameImg">
+          <img ref="imgDom" :src="gameBg">
         </div>
         <canvas ref="gameCanvas" class="play-pad" :style="{width:`${imgWidth}px`, height: `${2*imgHeight}px`}"
                 @touchstart="touchStart" @touchmove="touchMove" @touchend="touchEnd"
@@ -57,10 +57,37 @@
     data() {
       return {
         // 配置参数
-        gameImg: undefined,
+        gameBg: "https://p0.meituan.net/dpnewvc/44ef1007881354a14fb027a24fe8bb22258884.png",
+        gameImg: "https://p1.meituan.net/dpnewvc/dd168278f4a8b1fe5cc3d1749a68f4a1193368.png",
         rows: 2,
         columns: 3,
 
+        // 原始切片数据
+        originCuts: [
+          {
+            width: 395,
+            height: 178,
+            url: 'https://p0.meituan.net/dpnewvc/2767c555cea336ed95b729aa3b9bb08c131998.png',
+            Image: null,
+            ration: 1.1,
+          },
+          {
+            width: 264,
+            height: 212,
+            url: 'https://p0.meituan.net/dpnewvc/63ee3b685616e1ba326b72971cdf079c100933.png',
+            Image: null,
+            ration: 1.2,
+            tx: 404,
+            ty: 72
+          },
+          {
+            width: 216,
+            height: 208,
+            url: 'https://p0.meituan.net/dpnewvc/16ae977b9730a4fc0c066fdaff55572772867.png',
+            Image: null,
+            ration: 1.1
+          }
+        ],
         // 页面自使用参数
         imgWidth: 375,
         imgHeight: 375,
@@ -81,26 +108,40 @@
     },
     components: {},
     mounted() {
-      this.loadImage('https://p1.meituan.net/dpnewvc/dd168278f4a8b1fe5cc3d1749a68f4a1193368.png')
+      this.loadImage(this.gameBg)
         .then(_ => {
           return this.getImageSize();
         })
         .then(_ => {
-          let imgCanvas = this.$refs.outImgCanvas, gameCanvas = this.$refs.gameCanvas;
-          if (imgCanvas.getContext) {
-            this.outCanvasCtx = imgCanvas.getContext('2d');
+          return this.loadAllCuts(this.originCuts)
+        })
+        .then(_ => {
+          return this.cutImage();
+        })
+        .then(_ => {
+          let gameCanvas = this.$refs.gameCanvas;
+          if (gameCanvas.getContext) {
             this.gameCanvasCtx = gameCanvas.getContext('2d');
             this.gameCanvasRect = gameCanvas.getBoundingClientRect();
-            imgCanvas.getContext('2d').drawImage(this.canvasImgEntity, 0, 0, this.imgWidth * this.canvasRation, this.imgHeight * this.canvasRation)
           }
-          return Promise.all([this.cutImage(), this.initCutPlaces()]);
-        })
-        .then(_ => {
-          return this.shuffleCuts();
-        })
-        .then(_ => {
           window.requestAnimationFrame(this.draw)
         })
+      //        .then(_ => {
+      //          let imgCanvas = this.$refs.outImgCanvas, gameCanvas = this.$refs.gameCanvas;
+      //          if (imgCanvas.getContext) {
+      //            this.outCanvasCtx = imgCanvas.getContext('2d');
+      //            this.gameCanvasCtx = gameCanvas.getContext('2d');
+      //            this.gameCanvasRect = gameCanvas.getBoundingClientRect();
+      //            imgCanvas.getContext('2d').drawImage(this.canvasImgEntity, 0, 0, this.imgWidth * this.canvasRation, this.imgHeight * this.canvasRation)
+      //          }
+      //          return Promise.all([this.cutImage(), this.initCutPlaces()]);
+      //        })
+      //        .then(_ => {
+      //          return this.shuffleCuts();
+      //        })
+      //        .then(_ => {
+      //          window.requestAnimationFrame(this.draw)
+      //        })
     },
     computed: {
       cutWidth() {
@@ -108,23 +149,33 @@
       },
       cutHeight() {
         return this.imgHeight / this.rows;
+      },
+      canvasHeight() {
+        return this.imgHeight * 2 * this.canvasRation;
       }
     },
     methods: {
       // 初始化：加载图片
+      loadAllCuts(list) {
+        return Promise.all(list.map(_ => {
+          return this.loadImage(_.url).then(ret => {
+            _.Image = ret;
+          });
+        }));
+      },
       loadImage(src) {
         return new Promise(res => {
           let img = new Image();
           img.src = src;
           img.onload = () => {
-            this.gameImg = src;
-            this.gameStep = GAME_STATUS.IMAGE_READY;
-            this.canvasImgEntity = img;
-            res();
+            //            this.gameImg = src;
+            //            this.gameStep = GAME_STATUS.IMAGE_READY;
+            //            this.canvasImgEntity = img;
+            res(img);
           };
         })
       },
-      // 初始化：获取图片高宽
+      // 初始化：获取背景图片高宽
       getImageSize() {
         return new Promise(res => {
           this.$nextTick(_ => {
@@ -139,68 +190,88 @@
       // 初始化：对图片进行切片
       cutImage() {
         return new Promise(res => {
-          for (let i = 0; i < this.rows; i++) {
-            for (let j = 0; j < this.columns; j++) {
-              this.cuts.push(this.getCut(i, j))
+          //          for (let i = 0; i < this.rows; i++) {
+          //            for (let j = 0; j < this.columns; j++) {
+          //              this.cuts.push(this.getCut(i, j))
+          //            }
+          //          }
+          this.cuts = this.originCuts.map((c, index) => {
+            return {
+              sWidth: c.width,
+              sHeight: c.height,
+              dx: 0,
+              dy: this.canvasHeight / 2,
+              Image: c.Image,
+              ration: c.ration,
+              zIndex: index,  // 层级
+              fixed: false    // 是否已经找到正确的位置
             }
-          }
+          });
           this.$nextTick(_ => res())
         })
       },
       // 初始化：获取某个切片数据
-      getCut(row, column) {
-        let cutHeight = this.cutHeight * this.canvasRation,
-          cutWidth = this.cutWidth * this.canvasRation;
-        return {
-          sx: cutWidth * column,
-          sy: cutHeight * row,
-          sWidth: cutWidth,
-          sHeight: cutHeight,
-          index: row * this.columns + column,
-          pIndex: -1
-        }
-      },
+      //      getCut(row, column) {
+      //        let cutHeight = this.cutHeight * this.canvasRation,
+      //          cutWidth = this.cutWidth * this.canvasRation;
+      //        return {
+      //          sx: cutWidth * column,
+      //          sy: cutHeight * row,
+      //          sWidth: cutWidth,
+      //          sHeight: cutHeight,
+      //          index: row * this.columns + column,
+      //          pIndex: -1
+      //        }
+      //      },
       // 对切片位置进行打乱,重新生成zIndex
-      shuffleCuts() {
-        return new Promise(res => {
-          this.cuts.map(item => {
-            item.ix = item.dx = this.getRandom(0, this.imgWidth - this.cutWidth) * this.canvasRation;
-            item.iy = item.dy = this.getRandom(this.imgHeight, this.imgHeight * 2 - this.cutHeight) * this.canvasRation;
-            item.zIndex = item.index;
-            item.pIndex = -1;
-          });
-          this.cutPlaces.map(_ => _.cutIndex = -1)
-          this.$nextTick(_ => res())
-        })
-      },
-      getRandom(min, max) {
-        return Math.floor(Math.random() * (max - min) + min);
-        //        return min;
-      },
+      //      shuffleCuts() {
+      //        return new Promise(res => {
+      //          this.cuts.map(item => {
+      //            item.ix = item.dx = this.getRandom(0, this.imgWidth - this.cutWidth) * this.canvasRation;
+      //            item.iy = item.dy = this.getRandom(this.imgHeight, this.imgHeight * 2 - this.cutHeight) * this.canvasRation;
+      //            item.zIndex = item.index;
+      //            item.pIndex = -1;
+      //          });
+      //          this.cutPlaces.map(_ => _.cutIndex = -1)
+      //          this.$nextTick(_ => res())
+      //        })
+      //      },
+      //      getRandom(min, max) {
+      //        return Math.floor(Math.random() * (max - min) + min);
+      //        //        return min;
+      //      },
 
       // 初始化：切片坑位的初始化
-      initCutPlaces() {
-        return new Promise(res => {
-          for (let i = 0; this.rows > i; i++) {
-            for (let j = 0; this.columns > j; j++) {
-              let cutPlace = this.getCut(i, j);
-              cutPlace.cutIndex = -1;
-              this.cutPlaces.push(cutPlace)
-            }
-          }
-          this.$nextTick(_ => res())
-        })
-      },
+      //      initCutPlaces() {
+      //        return new Promise(res => {
+      //          for (let i = 0; this.rows > i; i++) {
+      //            for (let j = 0; this.columns > j; j++) {
+      //              let cutPlace = this.getCut(i, j);
+      //              cutPlace.cutIndex = -1;
+      //              this.cutPlaces.push(cutPlace)
+      //            }
+      //          }
+      //          this.$nextTick(_ => res())
+      //        })
+      //      },
 
       // 绘制面板
       draw() {
         this.gameCanvasCtx.clearRect(0, 0, this.imgWidth * this.canvasRation, this.imgHeight * this.canvasRation * 2);
-        this.cutPlaces.map(_ => this.drawCutPlace(_));
-        let copyOne = this.cuts.slice().sort((a, b) => {
-          return a.zIndex >= b.zIndex;
-        });
-        copyOne.map(_ => this.drawCut(_));
+        this.cuts.map(item => this.drawOriginCut(item))
+        //        this.cutPlaces.map(_ => this.drawCutPlace(_));
+        //        let copyOne = this.cuts.slice().sort((a, b) => {
+        //          return a.zIndex >= b.zIndex;
+        //        });
+        //        copyOne.map(_ => this.drawCut(_));
         window.requestAnimationFrame(this.draw)
+      },
+      // 绘制切片
+      drawOriginCut({sx = 0, sy = 0, sWidth, sHeight, dx = 0, dy = 0, dWidth, dHeight, ration = 1, Image}) {
+        if (this.gameCanvasCtx) {
+          this.gameCanvasCtx.drawImage(Image, sx, sy, sWidth, sHeight, dx, dy, (dWidth || sWidth) * ration,
+            (dHeight || sHeight) * ration)
+        }
       },
       // 绘制某个切片
       drawCut({sx, sy, sWidth, sHeight, dx = 0, dy = 0, dWidth, dHeight}) {
@@ -220,16 +291,16 @@
 
       // 根据鼠标位置获取当前选中的是哪个切片
       getTargetCut(x, y) {
-        let tarIndex = -1, tarZIndex = -1, offset = {};
+        let tarArrIndex = -1, tarZIndex = -1, offset = {};
         this.cuts.map((item, index) => {
           let boundaryInfo = this.inBoundary(x, y, item);
           if (boundaryInfo.inBoundary && item.zIndex > tarZIndex) {
-            tarIndex = item.index;
+            tarArrIndex = index;
             tarZIndex = item.zIndex;
             offset = boundaryInfo;
           }
         });
-        return {index: tarIndex, ...offset};
+        return {index: tarArrIndex, ...offset};
       },
       // 判断鼠标是否位于这个切片内
       inBoundary(x, y, cut) {
@@ -244,18 +315,15 @@
       // 触摸拖动事件
       touchStart(e) {
         let target = this.getTargetCut(e.touches[0].clientX - this.gameCanvasRect.left, e.touches[0].clientY - this.gameCanvasRect.top);
+        console.log(target);
         if (target.index !== -1) {
           this.draging = true;
-          let dragIndex = -1;
-          this.cuts.map((_, i) => {
-            if (_.index === target.index) dragIndex = i;
-          });
-          this.dragIndex = dragIndex;
+          this.dragIndex = target.index;
           this.dragOffset = {
             offsetX: target.offsetX,
             offsetY: target.offsetY
           };
-          this.cuts[dragIndex].zIndex = this.maxZIndex++;
+          //          this.cuts[target.index].zIndex = this.maxZIndex++;
         }
       },
       touchMove(e) {
@@ -265,9 +333,9 @@
         }
       },
       touchEnd(e) {
-        if (this.draging && this.dragIndex !== -1) {
-          this.fixCutsPos(this.dragIndex);
-        }
+        //        if (this.draging && this.dragIndex !== -1) {
+        //          this.fixCutsPos(this.dragIndex);
+        //        }
         this.draging = false;
         this.dragIndex = -1;
       },

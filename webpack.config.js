@@ -67,7 +67,23 @@ module.exports = {
   },
   plugins: [
     new ExtractTextPlugin({filename: 'css/[name].css'}),
-    // new FaviconsWebpackPlugin('./favicon.png'),
+    new FaviconsWebpackPlugin({
+      logo: './favicon.png',
+      persistentCache: true,
+      prefix: 'favicons/',
+      icons: {
+        android: true,
+        appleIcon: true,
+        appleStartup: false,
+        coast: false,
+        favicons: true,
+        firefox: false,
+        opengraph: false,
+        twitter: false,
+        yandex: false,
+        windows: false
+      }
+    }),
     new HtmlWebpackPlugin({
       title: '这是Vue首页',
       template: './vue/index.ejs',
